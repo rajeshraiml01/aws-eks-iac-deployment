@@ -6,7 +6,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the requirements.txt file to the working directory
-COPY requirements.txt ./
+COPY ./requirements.txt ./
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
