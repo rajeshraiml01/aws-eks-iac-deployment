@@ -1,4 +1,5 @@
-# VPC for Cluster
+# VPC for Cluster add ECR Repository
+# This module creates a VPC, EKS cluster, and ECR repository in AWS.
 data "aws_availability_zones" "azs" {}
 
 module "vpc" {
