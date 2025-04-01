@@ -58,5 +58,5 @@ jobs:
     - name: Get Service Details
       run: |
         echo "Fetching service details..."
-        kubectl get service hello-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' || \
-        kubectl get service hello-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+        kubectl get service kubernetes-demo-hello-app-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' || \
+        kubectl get service kubernetes-demo-hello-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
