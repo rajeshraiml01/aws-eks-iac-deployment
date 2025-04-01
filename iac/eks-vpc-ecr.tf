@@ -1,4 +1,4 @@
-# VPC for Cluster ad
+# VPC for Cluster
 data "aws_availability_zones" "azs" {}
 
 module "vpc" {
@@ -56,27 +56,16 @@ module "eks" {
     }
   }
 
-  # Managed Node Groups
   eks_managed_node_groups = {
     initial = {
       instance_types = ["t3.small"]
       min_size       = 2
       max_size       = 4
       desired_size   = 2
-
-      # Specify the subnets for the node group
-      subnet_ids = module.vpc.private_subnets
-
-      # Additional IAM policies for worker nodes
-      iam_role_additional_policies = [
-        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
-        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-      ]
     }
   }
 
-  tags = var.tags 
+  tags = var.tags
 }
 
 module "ecr" {
