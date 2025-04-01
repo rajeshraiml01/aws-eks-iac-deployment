@@ -1,5 +1,4 @@
-# VPC for Cluster add ECR Repository
-# This module creates a VPC, EKS cluster, and ECR repository in AWS.
+# VPC for Cluster ad
 data "aws_availability_zones" "azs" {}
 
 module "vpc" {
@@ -56,8 +55,6 @@ module "eks" {
       most_recent = true
     }
   }
-  # Helm charts for Kubernetes Dashboard and Metrics Server should be managed separately
-  # using the Helm provider or another Terraform module.
 
   eks_managed_node_groups = {
     initial = {
@@ -65,19 +62,15 @@ module "eks" {
       min_size       = 2
       max_size       = 4
       desired_size   = 2
-      
-      iam_role_additional_policies = [
-        "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-        "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
-        "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-      ]
-
     }
   }
 
-  
-
   tags = var.tags
+  
+  depends_on = [aws_iam_role_policy_attachment.amazon_eks_cluster_policy, 
+    aws_iam_role_policy_attachment.nodes_amazon_eks_worker_node_policy,
+    aws_iam_role_policy_attachment.nodes_amazon_eks_cni_policy,
+    aws_iam_role_policy_attachment.nodes_amazon_ec2_container_registry_read_only,]
 }
 
 module "ecr" {
@@ -93,13 +86,4 @@ module "ecr" {
   tags = {
     Terraform = "true"
   }
-}
-
-resource "aws_security_group_rule" "eks_allow_worker_to_control_plane" {
-  type        = "ingress"
-  from_port   = 443
-  to_port     = 443
-  protocol    = "tcp"
-  security_group_id = module.eks.cluster_security_group_id
-  source_security_group_id = module.eks.node_security_group_id
 }
